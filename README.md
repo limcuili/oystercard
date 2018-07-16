@@ -25,7 +25,16 @@ One way of solving this error would be to define this class and link it to this 
 
 
 ## The below is to keep track of what we test in IRB
-require './lib/oystercard.rb'
-card = Oystercard.new
+Checks that we've set up the card and are able to top up:  
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.balance  
+card.top_up(10)  
 card.balance
-card.top_up(10)
+
+Checks error for topping up over the limit:  
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.top_up(80)
+card.balance
+card.top_up(11)
