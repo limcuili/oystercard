@@ -1,4 +1,4 @@
-This is Week 2 of Makers.
+This is Week 2 of Makers - Pair Programming
 
 # oystercard
 
@@ -45,5 +45,14 @@ Checks that we are able to deduct money from the card:
 require './lib/oystercard.rb'  
 card = Oystercard.new  
 card.top_up(20)
+card.deduct(2.9)
+
+Checks that we are able to touch in and out:
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.top_up(20)
+card.touch_in
+card.in_journey?
+card.touch_out
 card.deduct(2.9)
 
