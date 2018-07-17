@@ -1,3 +1,5 @@
+This is Week 2 of Makers.
+
 # oystercard
 
 ## Learn debugging basics
@@ -24,7 +26,7 @@ This is a NameError, in the file path './spec/oystercard_spec.rb', in line numbe
 One way of solving this error would be to define this class and link it to this file, so that Ruby can find it
 
 
-## The below is to keep track of what we test in IRB
+## The below is to keep track of IRB feature tests
 Checks that we've set up the card and are able to top up:  
 require './lib/oystercard.rb'  
 card = Oystercard.new  
@@ -38,3 +40,10 @@ card = Oystercard.new
 card.top_up(80)
 card.balance
 card.top_up(11)
+
+Checks that we are able to deduct money from the card:
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.top_up(20)
+card.deduct(2.9)
+
