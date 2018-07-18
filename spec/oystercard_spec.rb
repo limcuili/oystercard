@@ -1,6 +1,9 @@
 require 'oystercard'
 
 describe Oystercard do
+
+  let(:entry_station){double :entry_station}
+
   it 'checks that Osystercard.new to create new Oyster' do
     expect(Oystercard.new).to be_instance_of Oystercard
   end
@@ -57,14 +60,14 @@ describe Oystercard do
   #   end
   # end
 
-  describe '#touch_in, #in_journey?, #touch_out' do
-    it { is_expected.to respond_to(:touch_in) }
+  describe '#touch_in(entry_station), #in_journey?, #touch_out' do
+    it { is_expected.to respond_to(:touch_in).with(1).argument }
     it { is_expected.to respond_to(:in_journey?) }
     it { is_expected.to respond_to(:touch_out) }
 
     context 'new clean card' do
       it 'gives an error when a new card of balance 0 is touched in' do
-        expect{ subject.touch_in }.to raise_error 'Error: Card has insufficient balance'
+        expect{ subject.touch_in(entry_station) }.to raise_error 'Error: Card has insufficient balance'
       end
 
       it 'is initially not in journey' do
@@ -78,24 +81,35 @@ describe Oystercard do
       end
 
       it 'is in journey once we have touched in' do
-        subject.touch_in
+        subject.touch_in(entry_station)
         expect(subject).to be_in_journey
       end
 
       it 'is not in journey once we have touched out' do
-        subject.touch_in
+        subject.touch_in(entry_station)
         subject.touch_out
         expect(subject).not_to be_in_journey
       end
 
       it 'gives an error when an existing card of balance 0.5 is touched in' do
         subject.top_up(-4.5)
-        expect{ subject.touch_in }.to raise_error 'Error: Card has insufficient balance'
+        expect{ subject.touch_in(entry_station) }.to raise_error 'Error: Card has insufficient balance'
       end
 
       it 'deducts the minimum fare from your card when you touch out' do
         minimum_fare = Oystercard::MIN_FARE
         expect{ subject.touch_out }.to change{ subject.balance }.by(-minimum_fare)
+      end
+
+      it 'expects the card to remember the entry station after touch in' do
+        subject.touch_in(entry_station)
+        expect(subject).to be_in_journey
+      end
+
+      it 'Make the station forget the entry station after touch out' do
+        subject.touch_in(entry_station)
+        subject.touch_out
+        expect(subject).not_to be_in_journey
       end
 
     end
