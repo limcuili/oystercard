@@ -1,5 +1,5 @@
 class Oystercard
-  attr_reader :balance, :in_journey, :entry_station
+  attr_reader :balance, :in_journey, :entry_station, :history
   MAX_BALANCE = 90
   MIN_BALANCE = 1
   MIN_FARE = 2.30
@@ -8,6 +8,7 @@ class Oystercard
     @balance = 0
     @in_journey = false
     @entry_station = nil
+    @history = []
   end
 
   def top_up(amount)
@@ -21,13 +22,21 @@ class Oystercard
     @entry_station = entry_station
   end
 
-  def touch_out
+  def touch_out(exit_station)
     deduct(MIN_FARE)
+    @exit_station = exit_station
+    @history << { :entry => @entry_station, :leave => @exit_station }
     @entry_station = nil
   end
 
   def in_journey?
     !!@entry_station
+  end
+
+  def history
+    @history.each_with_index do |hash,index|
+      return "#{index + 1}. #{hash[:entry]} - #{hash[:leave]}"
+    end
   end
 
 private

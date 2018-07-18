@@ -3,6 +3,7 @@ require 'oystercard'
 describe Oystercard do
 
   let(:entry_station){double :entry_station}
+  let(:exit_station){double :exit_station}
 
   it 'checks that Osystercard.new to create new Oyster' do
     expect(Oystercard.new).to be_instance_of Oystercard
@@ -63,7 +64,7 @@ describe Oystercard do
   describe '#touch_in(entry_station), #in_journey?, #touch_out' do
     it { is_expected.to respond_to(:touch_in).with(1).argument }
     it { is_expected.to respond_to(:in_journey?) }
-    it { is_expected.to respond_to(:touch_out) }
+    it { is_expected.to respond_to(:touch_out).with(1).argument }
 
     context 'new clean card' do
       it 'gives an error when a new card of balance 0 is touched in' do
@@ -87,7 +88,7 @@ describe Oystercard do
 
       it 'is not in journey once we have touched out' do
         subject.touch_in(entry_station)
-        subject.touch_out
+        subject.touch_out(exit_station)
         expect(subject).not_to be_in_journey
       end
 
@@ -98,7 +99,7 @@ describe Oystercard do
 
       it 'deducts the minimum fare from your card when you touch out' do
         minimum_fare = Oystercard::MIN_FARE
-        expect{ subject.touch_out }.to change{ subject.balance }.by(-minimum_fare)
+        expect{ subject.touch_out(exit_station) }.to change{ subject.balance }.by(-minimum_fare)
       end
 
       it 'expects the card to remember the entry station after touch in' do
@@ -108,8 +109,28 @@ describe Oystercard do
 
       it 'Make the station forget the entry station after touch out' do
         subject.touch_in(entry_station)
-        subject.touch_out
+        subject.touch_out(exit_station)
         expect(subject).not_to be_in_journey
+      end
+    end
+  end
+
+  describe '#history' do
+    it { is_expected.to respond_to(:history) }
+
+    it 'initialize with an empty arary' do
+      expect(subject.history).to be_a(Array)
+    end
+
+    context 'a card with £5 balance' do
+      before do
+        subject.top_up(5)
+      end
+
+      it 'print out a journey' do
+        subject.touch_in('abc')
+        subject.touch_out('def')
+        expect(subject.history).to eq '1. abc - def'
       end
 
     end
