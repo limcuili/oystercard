@@ -25,7 +25,7 @@ class Oystercard
   def touch_out(exit_station)
     deduct(MIN_FARE)
     @exit_station = exit_station
-    @history << { :entry => @entry_station, :leave => @exit_station }
+    @history << { :entry => @entry_station, :exit => @exit_station }
     @entry_station = nil
   end
 
@@ -35,7 +35,7 @@ class Oystercard
 
   def history
     @history.each_with_index do |hash,index|
-      return "#{index + 1}. #{hash[:entry]} - #{hash[:leave]}"
+      puts "#{index + 1}. #{hash[:entry]} - #{hash[:exit]}"
     end
   end
 

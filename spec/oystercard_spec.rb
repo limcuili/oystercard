@@ -66,7 +66,7 @@ describe Oystercard do
     it { is_expected.to respond_to(:in_journey?) }
     it { is_expected.to respond_to(:touch_out).with(1).argument }
 
-    context 'new clean card' do
+    context 'new card' do
       it 'gives an error when a new card of balance 0 is touched in' do
         expect{ subject.touch_in(entry_station) }.to raise_error 'Error: Card has insufficient balance'
       end
@@ -81,6 +81,12 @@ describe Oystercard do
         subject.top_up(5)
       end
 
+      it 'gives an error when an existing card of balance 0.5 is touched in' do
+
+        subject.top_up(-4.5)
+        expect{ subject.touch_in(entry_station) }.to raise_error 'Error: Card has insufficient balance'
+      end
+
       it 'is in journey once we have touched in' do
         subject.touch_in(entry_station)
         expect(subject).to be_in_journey
@@ -90,11 +96,6 @@ describe Oystercard do
         subject.touch_in(entry_station)
         subject.touch_out(exit_station)
         expect(subject).not_to be_in_journey
-      end
-
-      it 'gives an error when an existing card of balance 0.5 is touched in' do
-        subject.top_up(-4.5)
-        expect{ subject.touch_in(entry_station) }.to raise_error 'Error: Card has insufficient balance'
       end
 
       it 'deducts the minimum fare from your card when you touch out' do
@@ -127,14 +128,12 @@ describe Oystercard do
         subject.top_up(5)
       end
 
-      it 'print out a journey' do
+      it 'print out a single journey history' do
         subject.touch_in('abc')
         subject.touch_out('def')
-        expect(subject.history).to eq '1. abc - def'
+        expect { subject.history }.to output("1. abc - def\n").to_stdout
       end
-
     end
   end
-
 
 end
