@@ -56,3 +56,11 @@ card.in_journey?
 card.touch_out
 card.deduct(2.9)
 
+
+Checks that we are able to remember the journey:
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.top_up(20)
+card.touch_in(entry_station)
+card.touch_out(exit_station)
+card.history
