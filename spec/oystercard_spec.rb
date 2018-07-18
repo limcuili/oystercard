@@ -119,7 +119,7 @@ describe Oystercard do
   describe '#history' do
     it { is_expected.to respond_to(:history) }
 
-    it 'initialize with an empty arary' do
+    it 'initialize with an empty arrary' do
       expect(subject.history).to be_a(Array)
     end
 
