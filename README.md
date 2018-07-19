@@ -64,3 +64,18 @@ card.top_up(20)
 card.touch_in(entry_station)
 card.touch_out(exit_station)
 card.history
+
+Checks that we deduct a penalty charge if the user does not touch in:
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.top_up(20)
+card.touch_out(exit_station)
+card.balance
+
+Checks that we deduct a penalty charge if the user does not touch out:
+require './lib/oystercard.rb'  
+card = Oystercard.new  
+card.top_up(20)
+card.touch_in(entry_station)
+card.touch_in(entry_station2)
+card.balance
